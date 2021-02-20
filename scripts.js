@@ -1,4 +1,5 @@
- const Modal = {
+// Modal para inclusão dos lançamentos
+const Modal = {
     open(){
         document.querySelector('.modal-overlay')
         .classList.add('active'); // adicionar a classe 'active' no modal
@@ -23,12 +24,10 @@ const ModalRemove = {
 
 //Função para confirmar a exclusão do registro da data-table
 const ConfirmarRemove = {
-
     delete() {
         Transaction.remove();
         ModalRemove.close();
-    }
-    
+    } 
 }
 
 // Armazenamento dos dados no local storage do navegador
@@ -44,7 +43,7 @@ const Storage = {
     }
 }
 
-
+// Trabalhando com as transações
 const Transaction = {
     all: Storage.get(),
 
@@ -113,7 +112,6 @@ const DOM = {
         const amount = Utils.formatCurrency(transaction.amount);
 
 
-
         const html = `
         <tr>
             <td class="description">${transaction.description}</td>
@@ -121,7 +119,6 @@ const DOM = {
             <td class="${CSSClass}">${amount}</td>
             <td class="date">${transaction.date}</td>
             <td class="actions">
-                <img onclick="Transaction.remove(${index})" src="./assets/minus.svg" alt="Remover transação">
                 <img onclick="ModalRemove.open()" src="./assets/minus.svg" alt="Remover transação">
             </td>
          </tr>
@@ -153,9 +150,8 @@ const DOM = {
 const Utils = {
     formatAmount(value) {
         value = Number(value) * 100; // sem remover ponto e virgula
-       // value = Number(value.replace(/\,\./g, "")) * 100; // removendo ponto e virgula
         
-        return value;
+        return Math.round(value);
     },
 
     formatData(date) {
@@ -164,8 +160,6 @@ const Utils = {
     },
 
     formatCurrency(value) {
-        //colocar o sinal de '-' na frente do valores de despesas
-        //const signal = Number(value) < 0 ? "-" : ""
 
         value = String(value).replace(/\D/g, "")
 
@@ -182,14 +176,12 @@ const Utils = {
     
 }
 
-// pegar os dados do formulario
 const Form = {
     description: document.querySelector('input#description'),
     type: document.querySelector('select#type'),
     amount: document.querySelector('input#amount'),
     date: document.querySelector('input#date'),
 
-    //pega os valores dos inputs
     getValues(){
         return {
             description: Form.description.value,
@@ -199,7 +191,7 @@ const Form = {
         }
     },
 
-    //validar se os campos estão preenchidos
+    // Validação para verificar se os campos estão preenchidos
     validateFields(){
         const { description, type, amount, date } = Form.getValues();
          
@@ -267,6 +259,3 @@ const App = {
 }
 
 App.init();
-
-
-
